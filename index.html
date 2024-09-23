@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Developer Resource Tracking</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Developers</h2>
+        <!-- Form to add a new developer -->
+        <div class="add-developer-form">
+            <input type="text" id="new-developer-name" placeholder="Developer name">
+            <button id="add-developer-btn">Add</button>
+        </div>
+        <div id="developers">
+            <!-- Developers will be added here -->
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Form to add a new project -->
+        <div class="add-project-form">
+            <input type="text" id="new-project-name" placeholder="Project name">
+            <button id="add-project-btn">Add project</button>
+        </div>
+
+        <div class="projects" id="projects">
+            <!-- Project columns will be added dynamically here -->
+        </div>
+    </div>
+
+    <!-- Export and import settings buttons -->
+    <div class="settings">
+        <button id="export-btn">Export settings</button>
+        <input type="file" id="import-file-input" accept=".json" style="display:none;">
+        <button id="import-btn">Import settings</button>
+    </div>
+
+    <!-- Modal window for selecting developer color -->
+    <div id="color-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-color-modal" class="close">&times;</span>
+            <h3>Select color for developer</h3>
+            <input type="color" id="color-picker">
+            <button id="save-color-btn">Save</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

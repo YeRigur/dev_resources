@@ -1,0 +1,329 @@
+body {
+    display: flex;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.sidebar {
+    width: 200px;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    text-align: center;
+}
+
+/* Styles for the add developer form */
+.add-developer-form {
+    display: flex;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.add-developer-form input[type="text"] {
+    width: calc(100% - 90px);
+    padding: 5px;
+}
+
+.add-developer-form button {
+    width: 80px;
+    padding: 5px;
+    margin-left: 5px;
+}
+
+#developers .developer {
+    position: relative;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #ccc;
+    cursor: grab;
+    text-align: center;
+    border-radius: 5px;
+}
+
+/* Styles for the color change button */
+.developer .color-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.developer .color-btn:hover {
+    color: #000;
+}
+
+/* Main content area */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.add-project-form {
+    display: flex;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.add-project-form input[type="text"] {
+    width: calc(100% - 140px);
+    padding: 5px;
+}
+
+.add-project-form button {
+    width: 120px;
+    padding: 5px;
+    margin-left: 5px;
+}
+
+/* Styles for the project header */
+.project-header {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Styles for the delete project button */
+.delete-project-btn {
+    background: none;
+    border: none;
+    font-size: 24px; /* Icon size */
+    cursor: pointer;
+    color: black;
+}
+
+.projects {
+    display: flex;
+    flex-wrap: wrap; /* Allows elements to wrap to the next line */
+    gap: 20px; /* Space between projects */
+    padding: 20px;
+    justify-content: flex-start; /* Align projects to the left */
+}
+
+/* Updated styles for project */
+.project-column {
+    width: 300px; /* Fixed width for project container */
+    background-color: #eaeaea;
+    padding: 10px;
+    border-radius: 5px;
+    box-sizing: border-box; /* Include padding in the total width */
+}
+
+/* Highlighted projects */
+.project-column.highlight {
+    border: 3px solid #4CAF50; /* Green border around highlighted project */
+    background-color: #f0fff0; /* Light green background */
+}
+
+/* Dimmed projects */
+.project-column.dimmed {
+    opacity: 0.5; /* Reduce visibility for dimmed projects */
+    filter: grayscale(100%); /* Apply grayscale */
+}
+
+/* Media queries for responsive design */
+@media (max-width: 1200px) {
+    .project-column {
+        flex: 1 1 calc(33.33% - 20px); /* 3 projects in a row for smaller screens */
+    }
+}
+
+@media (max-width: 900px) {
+    .project-column {
+        flex: 1 1 calc(50% - 20px); /* 2 projects in a row for smaller screens */
+    }
+}
+
+@media (max-width: 600px) {
+    .project-column {
+        flex: 1 1 100%; /* 1 project per row for small screens */
+    }
+}
+
+.project-column h2 {
+    text-align: center;
+}
+
+.sub-columns {
+    display: flex;
+    justify-content: space-between;
+}
+
+.sub-column {
+    width: 48%;
+}
+
+.sub-column h3 {
+    text-align: center;
+}
+
+.developer-dropzone {
+    min-height: 200px;
+    background-color: #fff;
+    border: 2px dashed #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.developer-dropzone .developer {
+    background-color: inherit;
+    cursor: default;
+}
+
+.fte-goal, .fte-total {
+    justify-content: space-between;
+    display: flex;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.fte-input {
+    width: 50px;
+}
+
+/* Styles for the remove developer button */
+.remove-btn {
+    background: none;
+    border: none;
+    font-size: 20px; /* Icon size for the trash can */
+    cursor: pointer;
+    color: red;
+}
+
+.remove-btn:hover {
+    color: darkred;
+}
+
+/* Styles for assigned developers in projects */
+.developer-assigned {
+    position: relative;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #ccc;
+    border-radius: 5px;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.developer-assigned .remove-btn:hover {
+    background-color: #ff1a1a;
+}
+
+/* Modal window for color picker */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+}
+
+/* Additional styles for the "Save" button in modal */
+#save-color-btn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#save-color-btn:hover {
+    background-color: #45a049;
+}
+
+/* Styles for export and import buttons */
+.settings {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+}
+
+.settings button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+#export-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+#import-btn {
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+#export-btn:hover {
+    background-color: #45a049;
+}
+
+#import-btn:hover {
+    background-color: #007bb5;
+}
+
+/* Hover styles for delete project button */
+.delete-project-btn:hover {
+    color: #ff4d4d;
+}
+
+/* Styles for delete project button */
+.delete-project-btn {
+    position: relative;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.delete-project-btn:hover {
+    color: red;
+}
+
+.fte-difference {
+    margin-top: 5px;
+    font-weight: bold;
+}
