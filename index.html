@@ -6,47 +6,93 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Developers</h2>
-        <!-- Form to add a new developer -->
-        <div class="add-developer-form">
-            <input type="text" id="new-developer-name" placeholder="Developer name">
-            <button id="add-developer-btn">Add</button>
-        </div>
-        <div id="developers">
-            <!-- Developers will be added here -->
-        </div>
-    </div>
-
-    <div class="main-content">
-        <!-- Form to add a new project -->
-        <div class="add-project-form">
-            <input type="text" id="new-project-name" placeholder="Project name">
-            <button id="add-project-btn">Add project</button>
-        </div>
-
-        <div class="projects" id="projects">
-            <!-- Project columns will be added dynamically here -->
+    <div class="topbar">
+        <div class="topbar-row">
+            <div class="theme-toggle">
+                <label for="theme-switch">Theme:</label>
+                <select id="theme-switch">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                </select>
+            </div>
+            <p>All data is stored locally in your browser. You can export and import settings.</p>
+            <div class="data-controls">
+                <button id="export-btn">Export data</button>
+                <input type="file" id="import-file-input" accept=".json" style="display:none;">
+                <button id="import-btn">Import data</button>
+                <button id="reset-btn" class="reset-btn">Reset data</button>
+            </div>
         </div>
     </div>
 
-    <!-- Export and import settings buttons -->
-    <div class="settings">
-        <button id="export-btn">Export settings</button>
-        <input type="file" id="import-file-input" accept=".json" style="display:none;">
-        <button id="import-btn">Import settings</button>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Developers</h2>
+            <div class="add-developer-form">
+                <input type="text" id="new-developer-name" placeholder="Developer name">
+				<select id="new-developer-role">
+				    <option value="Junior">Junior Dev</option>
+				    <option value="Middle">Middle Dev</option>
+				    <option value="Senior">Senior Dev</option>
+				    <option value="Tech Lead">Tech Lead</option>
+				</select>
+                <select id="new-developer-region">
+                    <option value="Lviv">Lviv</option>
+                    <option value="Latam">Latam</option>
+                </select>
+                <button id="add-developer-btn">Add</button>
+            </div>
+
+            <div class="search-developers">
+                <input type="text" id="developer-search" placeholder="Search by name...">
+                <select id="developer-role-filter">
+                    <option value="">All Roles</option>
+                    <option value="Junior">Junior</option>
+                    <option value="Middle">Middle</option>
+                    <option value="Senior">Senior</option>
+                    <option value="Tech Lead">Tech Lead</option>
+                    <option value="Vacancy (BE)">Vacancy (BE)</option>
+                    <option value="Vacancy (FE)">Vacancy (FE)</option>
+                </select>
+                <select id="developer-region-filter">
+                    <option value="">All Regions</option>
+                    <option value="Lviv">Lviv</option>
+                    <option value="Latam">Latam</option>
+                </select>
+            </div>
+
+            <div id="developers">
+                <!-- Developers and Vacancies -->
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="add-project-form">
+                <input type="text" id="new-project-name" placeholder="Project name">
+                <button id="add-project-btn">Add project</button>
+            </div>
+
+            <div class="projects" id="projects">
+                <!-- Projects here -->
+            </div>
+        </div>
     </div>
 
-    <!-- Modal window for selecting developer color -->
     <div id="color-modal" class="modal">
         <div class="modal-content">
             <span id="close-color-modal" class="close">&times;</span>
-            <h3>Select color for developer</h3>
+            <h3>Select a color for this developer</h3>
             <input type="color" id="color-picker">
             <button id="save-color-btn">Save</button>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="src/data.js" defer></script>
+    <script src="src/storage.js" defer></script>
+    <script src="src/ui.js" defer></script>
+    <script src="src/dragdrop.js" defer></script>
+    <script src="src/theme.js" defer></script>
+    <script src="src/search.js" defer></script>
+    <script src="src/app.js" defer></script>
 </body>
 </html>

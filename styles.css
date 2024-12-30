@@ -1,88 +1,274 @@
+:root {
+    --bg-color: #f9f9f9;
+    --text-color: #333333;
+    --header-bg: #f1f1f1;
+    --accent-color: #4CAF50;
+    --project-bg: #ffffff;
+    --developer-bg: #d3d3d3; 
+    --developer-techlead-bg: #b0c4de; 
+    --vacancy-bg: #fff8dc; 
+    --highlight-border: 3px solid #4CAF50;
+    --highlight-bg: #f0fff0;
+    --dimmed-opacity: 0.5;
+    --developer-techlead-border: 2px solid gold;
+    --transition-time: 0.3s;
+}
+
+body.dark {
+    --bg-color: #2e2e2e;
+    --text-color: #e0e0e0;
+    --header-bg: #3a3a3a;
+    --project-bg: #333333; /* ещё темнее для контраста */
+    --developer-bg: #5a5a5a;
+    --developer-techlead-bg: #5f7f9d;
+    --vacancy-bg: #b19100; 
+    --developer-dropzone-bg: var(--transition-time);
+}
+
+/* Global */
 body {
-    display: flex;
     margin: 0;
     font-family: Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color var(--transition-time), color var(--transition-time);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+body.dark .developer:hover {
+    background-color: #666;
+}
+
+body.dark .developer-assigned:hover {
+    background-color: #666;
+}
+
+body.dark .developer-dropzone {
+    background-color: var(--transition-time);
+}
+
+
+.developer-assigned.vacancy {
+    color: black;
+    background-color: #ffcc00; /* более светлый, отличающийся от sidebar */
+}
+
+
+.add-project-form button {
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    background-color: var(--accent-color);
+    color: #fff;
+    cursor: pointer;
+}
+
+.add-project-form button:hover {
+    background-color: #45a049;
+}
+
+
+/* Make sure inputs in dark theme are styled */
+body.dark input,
+body.dark select,
+body.dark textarea {
+    background: #555;
+    color: #fff;
+    border: 1px solid #777;
+}
+
+/* topbar */
+.topbar {
+    background-color: var(--header-bg);
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    z-index: 11;
+}
+
+.topbar-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.banner-row {
+    justify-content: center;
+}
+
+.theme-toggle, .data-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.data-controls button {
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color var(--transition-time);
+    font-size: 14px;
+}
+
+#export-btn { background-color: #4CAF50; }
+#export-btn:hover { background-color: #45a049; }
+
+#import-btn { background-color: #008CBA; }
+#import-btn:hover { background-color: #007bb5; }
+
+.reset-btn { background-color: #f44336; }
+.reset-btn:hover { background-color: #d32f2f; }
+
+/* Layout */
+.container {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - 80px); /* topbar height approx + some margin */
 }
 
 .sidebar {
-    width: 200px;
-    background-color: #f4f4f4;
+    width: 250px;
+    background-color: var(--header-bg);
     padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    border-right: 1px solid #ccc;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: auto;
+    border-left: 1px solid #ccc;
 }
 
 .sidebar h2 {
     text-align: center;
+    margin-top: 0;
+    font-size: 18px;
 }
 
-/* Styles for the add developer form */
-.add-developer-form {
-    display: flex;
+.add-developer-form, .search-developers {
     margin-bottom: 20px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
-.add-developer-form input[type="text"] {
-    width: calc(100% - 90px);
+.add-developer-form input[type="text"],
+.search-developers input[type="text"],
+.add-project-form input[type="text"] {
+    width: auto;
     padding: 5px;
+    border-radius: 5px;
+}
+
+.add-developer-form select {
+    width: 100%;
+    padding: 5px;
+    border-radius: 5px;
 }
 
 .add-developer-form button {
-    width: 80px;
     padding: 5px;
-    margin-left: 5px;
+    border-radius: 5px;
+    border: none;
+    background-color: var(--accent-color);
+    color: #fff;
+    cursor: pointer;
+}
+
+.add-developer-form button:hover {
+    background-color: #45a049;
 }
 
 #developers .developer {
     position: relative;
     padding: 10px;
     margin: 5px 0;
-    background-color: #ccc;
     cursor: grab;
-    text-align: center;
+    text-align: left;
     border-radius: 5px;
+    color: var(--text-color);
+    transition: background-color var(--transition-time);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+    background-color: var(--developer-bg);
 }
 
-/* Styles for the color change button */
+.developer.tech-lead {
+    background-color: var(--developer-techlead-bg);
+    border: var(--developer-techlead-border);
+}
+
+.developer.vacancy {
+    background-color: var(--vacancy-bg);
+    font-style: italic;
+    font-weight: bold;
+}
+
+.developer span {
+    flex: 1;
+}
+
 .developer .color-btn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
     background: none;
     border: none;
     cursor: pointer;
     font-size: 16px;
+    color: var(--text-color);
 }
 
 .developer .color-btn:hover {
     color: #000;
 }
 
-/* Main content area */
-.main-content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-}
-
+/* Projects */
 .add-project-form {
     display: flex;
     margin-bottom: 20px;
-    text-align: center;
+    align-items: center;
+    gap: 5px;
 }
 
-.add-project-form input[type="text"] {
-    width: calc(100% - 140px);
-    padding: 5px;
+.projects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
 }
 
-.add-project-form button {
-    width: 120px;
-    padding: 5px;
-    margin-left: 5px;
+.project-column {
+    width: 300px;
+    background-color: var(--project-bg);
+    padding: 10px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: background-color var(--transition-time);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: relative;
+    border: 1px solid #ccc;
 }
 
-/* Styles for the project header */
+.project-column.highlight {
+    border: var(--highlight-border);
+    background-color: var(--highlight-bg);
+}
+
+.project-column.dimmed {
+    opacity: var(--dimmed-opacity);
+    filter: grayscale(100%);
+}
+
 .project-header {
     position: relative;
     display: flex;
@@ -90,70 +276,31 @@ body {
     align-items: center;
 }
 
-/* Styles for the delete project button */
-.delete-project-btn {
-    background: none;
-    border: none;
-    font-size: 24px; /* Icon size */
-    cursor: pointer;
-    color: black;
-}
-
-.projects {
-    display: flex;
-    flex-wrap: wrap; /* Allows elements to wrap to the next line */
-    gap: 20px; /* Space between projects */
-    padding: 20px;
-    justify-content: flex-start; /* Align projects to the left */
-}
-
-/* Updated styles for project */
-.project-column {
-    width: 300px; /* Fixed width for project container */
-    background-color: #eaeaea;
-    padding: 10px;
-    border-radius: 5px;
-    box-sizing: border-box; /* Include padding in the total width */
-}
-
-/* Highlighted projects */
-.project-column.highlight {
-    border: 3px solid #4CAF50; /* Green border around highlighted project */
-    background-color: #f0fff0; /* Light green background */
-}
-
-/* Dimmed projects */
-.project-column.dimmed {
-    opacity: 0.5; /* Reduce visibility for dimmed projects */
-    filter: grayscale(100%); /* Apply grayscale */
-}
-
-/* Media queries for responsive design */
-@media (max-width: 1200px) {
-    .project-column {
-        flex: 1 1 calc(33.33% - 20px); /* 3 projects in a row for smaller screens */
-    }
-}
-
-@media (max-width: 900px) {
-    .project-column {
-        flex: 1 1 calc(50% - 20px); /* 2 projects in a row for smaller screens */
-    }
-}
-
-@media (max-width: 600px) {
-    .project-column {
-        flex: 1 1 100%; /* 1 project per row for small screens */
-    }
-}
-
 .project-column h2 {
     text-align: center;
+    margin-top: 0;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.delete-project-btn {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.delete-project-btn:hover {
+    color: red;
 }
 
 .sub-columns {
     display: flex;
     justify-content: space-between;
+    gap: 5px;
 }
 
 .sub-column {
@@ -162,6 +309,8 @@ body {
 
 .sub-column h3 {
     text-align: center;
+    font-size: 14px;
+    margin-bottom: 5px;
 }
 
 .developer-dropzone {
@@ -170,59 +319,68 @@ body {
     border: 2px dashed #ccc;
     padding: 10px;
     border-radius: 5px;
+    color: #000;
+    transition: background-color var(--transition-time);
 }
 
-.developer-dropzone .developer {
-    background-color: inherit;
-    cursor: default;
+.developer-dropzone:hover {
+    background-color: #f9f9f9;
 }
 
-.fte-goal, .fte-total {
-    justify-content: space-between;
-    display: flex;
-    margin-top: 10px;
+.fte-goal, .fte-total, .fte-difference {
+    margin-top: 5px;
     text-align: center;
+    font-size: 14px;
+}
+
+.fte-goal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
 }
 
 .fte-input {
     width: 50px;
+    text-align: center;
+    border-radius: 5px;
 }
 
-/* Styles for the remove developer button */
-.remove-btn {
-    background: none;
-    border: none;
-    font-size: 20px; /* Icon size for the trash can */
-    cursor: pointer;
-    color: red;
-}
-
-.remove-btn:hover {
-    color: darkred;
-}
-
-/* Styles for assigned developers in projects */
 .developer-assigned {
     position: relative;
-    padding: 10px;
+    padding: 5px;
     margin: 5px 0;
-    background-color: #ccc;
     border-radius: 5px;
     text-align: center;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: var(--text-color);
+    gap: 5px;
+    transition: background-color var(--transition-time);
+    background-color: var(--developer-bg);
+}
+
+.developer-assigned:hover {
+    background-color: #e0e0e0;
+}
+
+.developer-assigned .remove-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--text-color);
 }
 
 .developer-assigned .remove-btn:hover {
-    background-color: #ff1a1a;
+    color: red;
 }
 
-/* Modal window for color picker */
 .modal {
-    display: none; /* Hidden by default */
+    display: none; 
     position: fixed;
-    z-index: 1;
+    z-index: 100;
     left: 0;
     top: 0;
     width: 100%;
@@ -232,19 +390,20 @@ body {
 }
 
 .modal-content {
-    background-color: #fefefe;
+    background-color: var(--bg-color);
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 300px;
     text-align: center;
     border-radius: 5px;
+    color: var(--text-color);
 }
 
 .close {
     color: #aaa;
     float: right;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
     cursor: pointer;
 }
@@ -252,14 +411,12 @@ body {
 .close:hover,
 .close:focus {
     color: black;
-    text-decoration: none;
 }
 
-/* Additional styles for the "Save" button in modal */
 #save-color-btn {
     margin-top: 15px;
     padding: 10px 20px;
-    background-color: #4CAF50;
+    background-color: var(--accent-color);
     color: white;
     border: none;
     cursor: pointer;
@@ -270,60 +427,14 @@ body {
     background-color: #45a049;
 }
 
-/* Styles for export and import buttons */
-.settings {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
+@media (max-width: 900px) {
+    .project-column {
+        width: calc(50% - 20px);
+    }
 }
 
-.settings button {
-    padding: 10px 20px;
-    margin-right: 10px;
-    cursor: pointer;
-}
-
-#export-btn {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-}
-
-#import-btn {
-    background-color: #008CBA;
-    color: white;
-    border: none;
-    border-radius: 5px;
-}
-
-#export-btn:hover {
-    background-color: #45a049;
-}
-
-#import-btn:hover {
-    background-color: #007bb5;
-}
-
-/* Hover styles for delete project button */
-.delete-project-btn:hover {
-    color: #ff4d4d;
-}
-
-/* Styles for delete project button */
-.delete-project-btn {
-    position: relative;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.delete-project-btn:hover {
-    color: red;
-}
-
-.fte-difference {
-    margin-top: 5px;
-    font-weight: bold;
+@media (max-width: 600px) {
+    .project-column {
+        width: 100%;
+    }
 }
