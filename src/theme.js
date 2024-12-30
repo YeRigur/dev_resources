@@ -1,3 +1,4 @@
+// theme.js
 function initThemeToggle() {
     const themeSelect = document.getElementById('theme-switch');
     themeSelect.addEventListener('change', (e) => {

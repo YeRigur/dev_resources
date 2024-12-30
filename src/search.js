@@ -1,3 +1,4 @@
+// search.js
 function initSearch() {
     const devSearch = document.getElementById('developer-search');
     const roleFilter = document.getElementById('developer-role-filter');

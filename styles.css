@@ -18,14 +18,13 @@ body.dark {
     --bg-color: #2e2e2e;
     --text-color: #e0e0e0;
     --header-bg: #3a3a3a;
-    --project-bg: #333333; /* ещё темнее для контраста */
+    --project-bg: #333333;
     --developer-bg: #5a5a5a;
     --developer-techlead-bg: #5f7f9d;
     --vacancy-bg: #b19100; 
     --developer-dropzone-bg: var(--transition-time);
 }
 
-/* Global */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -52,7 +51,7 @@ body.dark .developer-dropzone {
 
 .developer-assigned.vacancy {
     color: black;
-    background-color: #ffcc00; /* более светлый, отличающийся от sidebar */
+    background-color: #ffcc00;
 }
 
 

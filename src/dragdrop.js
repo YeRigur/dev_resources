@@ -22,13 +22,22 @@ function dragOver(e) {
 
 function dropDeveloper(e) {
     e.preventDefault();
+
     const devId = e.dataTransfer.getData('text/plain');
-    const developer = DEV_DATA.developers.find(dev => dev.id == devId);
+    const developer = DEV_DATA.developers.find(dev => String(dev.id) === String(devId));
     const projectId = e.currentTarget.getAttribute('data-project-id');
     const type = e.currentTarget.getAttribute('data-type');
 
+    if (!developer) {
+        console.error(`Developer not found с id=${devId}`);
+        return;
+    }
+
+    if (!developer.role) {
+        console.error(`Developer ${developer.name} (id=${developer.id}) does not have a 'role' field!`, developer);        return;
+    }
+
     if (developer.role.startsWith('Vacancy')) {
-        // Vacancy без FTE, просто добавляем
         DEV_DATA.assignments.push({
             devId: devId,
             projectId: projectId,
@@ -51,13 +60,16 @@ function dropDeveloper(e) {
         return;
     }
 
-    const newFTE = parseFloat(prompt(`Enter FTE for ${developer.name} (available: ${availableFTE}):`, Math.min(availableFTE, 1)));
+    const newFTE = parseFloat(prompt(
+        `Enter FTE for ${developer.name} (available: ${availableFTE}):`,
+        Math.min(availableFTE, 1)
+    ));
+
     if (isNaN(newFTE) || newFTE <= 0 || newFTE > availableFTE) {
         alert('Invalid FTE value.');
         return;
     }
 
-    // Добавляем новое назначение
     developer.fte += newFTE;
     DEV_DATA.assignments.push({
         devId: devId,
@@ -70,6 +82,5 @@ function dropDeveloper(e) {
     updateFTETotals();
     saveData();
 }
-
 
 window.initDragAndDrop = initDragAndDrop;

@@ -1,3 +1,4 @@
+// storage.js
 function loadData() {
     const savedDevelopers = JSON.parse(localStorage.getItem('developers'));
     const savedAssignments = JSON.parse(localStorage.getItem('assignments'));

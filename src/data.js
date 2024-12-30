@@ -14,9 +14,7 @@ const NEUTRAL_COLORS = [
 
 window.DEV_DATA = {
     developers: [
-        { id: 3, name: 'dev1', color: '#D3D3D3', fte: 0, role: 'Junior', region: 'Lviv' },
-        { id: 4, name: 'dev2', color: '#C0C0C0', fte: 0, role: 'Middle', region: 'Lviv' },
-        { id: 6, name: 'dev3', color: '#B0C4DE', fte: 0, role: 'Tech Lead', region: 'Lviv' }
+        { id: 3, name: 'developer', role: 'Junior', region: 'Lviv', color: '#D3D3D3', fte: 0 },
     ],
     projects: [
         { id: 1, name: 'Project A', backendFTEGoal: 1, frontendFTEGoal: 1 }

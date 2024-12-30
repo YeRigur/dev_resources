@@ -80,10 +80,8 @@ function removeAssignment(assignment) {
 function removeDeveloper(devId) {
     if (!confirm('Remove this developer entirely?')) return;
 
-    // Удалим девелопера
     DEV_DATA.developers = DEV_DATA.developers.filter(d => d.id != devId);
 
-    // Удалим все его назначения
     const hisAssignments = DEV_DATA.assignments.filter(a => a.devId == devId);
     hisAssignments.forEach(a => {
         const developer = DEV_DATA.developers.find(d => d.id == devId);
@@ -102,35 +100,51 @@ function removeDeveloper(devId) {
 
 
 function updateFTETotals() {
-    DEV_DATA.projects.forEach(project => {
-        ['backend', 'frontend'].forEach(type => {
-            const totalFTE = DEV_DATA.assignments
-                .filter(a => a.projectId == project.id && a.type == type && !DEV_DATA.developers.find(d => d.id == a.devId).role.startsWith('Vacancy'))
-                .reduce((sum, a) => sum + a.fte, 0);
+  DEV_DATA.projects.forEach(project => {
+    ['backend', 'frontend'].forEach(type => {
+      const totalFTE = DEV_DATA.assignments
+        .filter(a => {
+          const dev = DEV_DATA.developers.find(d => d.id == a.devId);
+          if (!dev || !dev.role) {
+            return false;
+          }
+          return (
+            a.projectId == project.id &&
+            a.type == type &&
+            !dev.role.startsWith('Vacancy')
+          );
+        })
+        .reduce((sum, a) => sum + a.fte, 0);
 
-            const totalElement = document.querySelector(`.fte-total[data-project-id='${project.id}'][data-type='${type}']`);
-            totalElement.textContent = `Current FTE: ${totalFTE}`;
+      const totalElement = document.querySelector(
+        `.fte-total[data-project-id='${project.id}'][data-type='${type}']`
+      );
+      totalElement.textContent = `Current FTE: ${totalFTE}`;
 
-            const goalInput = document.querySelector(`.fte-input[data-project-id='${project.id}'][data-type='${type}']`);
-            const goalFTE = parseFloat(goalInput.value);
-            const difference = goalFTE - totalFTE;
-            const differenceElement = document.querySelector(`.fte-difference[data-project-id='${project.id}'][data-type='${type}']`);
+      const goalInput = document.querySelector(
+        `.fte-input[data-project-id='${project.id}'][data-type='${type}']`
+      );
+      const goalFTE = parseFloat(goalInput.value);
+      const difference = goalFTE - totalFTE;
+      const differenceElement = document.querySelector(
+        `.fte-difference[data-project-id='${project.id}'][data-type='${type}']`
+      );
 
-            if (difference > 0) {
-                differenceElement.textContent = `FTE Shortfall: ${difference}`;
-                differenceElement.style.color = 'red';
-            } else if (difference === 0) {
-                differenceElement.textContent = `FTE Goal Met`;
-                differenceElement.style.color = 'green';
-            } else {
-                differenceElement.textContent = `Overassigned by ${Math.abs(difference)}`;
-                differenceElement.style.color = 'orange';
-            }
-        });
+      if (difference > 0) {
+        differenceElement.textContent = `FTE Shortfall: ${difference}`;
+        differenceElement.style.color = 'red';
+      } else if (difference === 0) {
+        differenceElement.textContent = `FTE Goal Met`;
+        differenceElement.style.color = 'green';
+      } else {
+        differenceElement.textContent = `Overassigned by ${Math.abs(difference)}`;
+        differenceElement.style.color = 'orange';
+      }
     });
+  });
 
-    renderDevelopers();
-    saveData();
+  renderDevelopers();
+  saveData();
 }
 
 
