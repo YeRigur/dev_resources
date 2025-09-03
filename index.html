@@ -5,16 +5,9 @@
   <title>Developer Resource Tracking</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="dark">
   <div class="topbar">
     <div class="topbar-row">
-      <div class="theme-toggle">
-        <label for="theme-switch">Theme:</label>
-        <select id="theme-switch">
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-        </select>
-      </div>
       <p>All data is stored locally in your browser. You can export and import settings.</p>
       <div class="data-controls">
         <button id="export-btn">Export data</button>
@@ -29,25 +22,54 @@
     <div class="sidebar">
       <h2>Developers</h2>
       <div class="add-developer-form">
+        <label for="new-developer-name">Full name</label>
         <input type="text" id="new-developer-name" placeholder="Developer name">
+        <label for="new-developer-role">Seniority</label>
         <select id="new-developer-role">
-          <option value="Junior">Junior Dev</option>
-          <option value="Middle">Middle Dev</option>
-          <option value="Senior">Senior Dev</option>
+          <option value="Junior">Junior</option>
+          <option value="Middle">Middle</option>
+          <option value="Senior">Senior</option>
           <option value="Tech Lead">Tech Lead</option>
-          <!-- Можно добавить вакансии, если нужны напрямую -->
-          <option value="Vacancy (BE)">Vacancy (BE)</option>
-          <option value="Vacancy (FE)">Vacancy (FE)</option>
         </select>
+        <label for="new-developer-direction">Direction</label>
+        <select id="new-developer-direction">
+          <option value="BE">Back-end</option>
+          <option value="FE">Front-end</option>
+          <option value="FULL">Full-stack</option>
+        </select>
+        <label for="new-developer-region">Region</label>
         <select id="new-developer-region">
           <option value="Lviv">Lviv</option>
           <option value="Latam">Latam</option>
         </select>
+        <label for="new-developer-project">Assign to project</label>
+        <select id="new-developer-project">
+          <option value="">No project</option>
+        </select>
+        <div id="assign-type-row" class="assign-type-row hidden">
+          <label for="new-developer-assignment-type">Assign as</label>
+          <select id="new-developer-assignment-type">
+            <option value="backend">Back-end</option>
+            <option value="frontend">Front-end</option>
+            <option value="fullstack">Full‑stack</option>
+          </select>
+        </div>
         <button id="add-developer-btn">Add</button>
       </div>
 
-      <div class="search-developers">
+      <div class="filters-row">
         <input type="text" id="developer-search" placeholder="Search by name...">
+        <select id="developer-sort-by" title="Sort developers">
+          <option value="name-asc">Name A–Z</option>
+          <option value="name-desc">Name Z–A</option>
+          <option value="seniority">Seniority</option>
+          <option value="avail-desc">Availability</option>
+          <option value="used-asc">Used time</option>
+        </select>
+        <button id="delete-selected-btn" class="danger-btn" title="Delete selected">✕</button>
+        <button id="filters-button" class="icon-btn" title="Filters">☰</button>
+      </div>
+      <div class="search-developers collapsed" id="filters-panel">
         <select id="developer-role-filter">
           <option value="">All Roles</option>
           <option value="Junior">Junior</option>
@@ -72,7 +94,18 @@
     <div class="main-content">
       <div class="add-project-form">
         <input type="text" id="new-project-name" placeholder="Project name">
-        <button id="add-project-btn">Add project</button>
+        <select id="project-group-select"></select>
+        <select id="group-sort-by" title="Sort groups">
+          <option value="name-asc">Groups A–Z</option>
+          <option value="name-desc">Groups Z–A</option>
+          <option value="proj-desc">Projects ↓</option>
+          <option value="proj-asc">Projects ↑</option>
+        </select>
+        <div class="project-actions">
+          <button id="density-toggle" class="icon-btn" title="Toggle compact view">Compact</button>
+          <button id="add-project-btn">Add project</button>
+          <button id="add-group-btn" class="icon-btn" title="Add group">Add group</button>
+        </div>
       </div>
 
       <div class="projects" id="projects">
@@ -80,6 +113,8 @@
       </div>
     </div>
   </div>
+
+  <div id="scroll-cue" class="scroll-cue" aria-hidden="true">▼ More projects below</div>
 
   <div id="color-modal" class="modal">
     <div class="modal-content">
@@ -91,10 +126,10 @@
   </div>
 
   <script src="src/data.js" defer></script>
+  <script src="src/utils.js" defer></script>
   <script src="src/storage.js" defer></script>
   <script src="src/ui.js" defer></script>
   <script src="src/dragdrop.js" defer></script>
-  <script src="src/theme.js" defer></script>
   <script src="src/search.js" defer></script>
   <script src="src/app.js" defer></script>
 </body>

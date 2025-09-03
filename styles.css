@@ -1,33 +1,48 @@
 :root {
     --bg-color: #f9f9f9;
-    --text-color: #333333;
-    --header-bg: #f1f1f1;
+    --text-color: #2b2b2b;
+    --muted-text: #666;
+    --header-bg: #f4f6f8;
     --accent-color: #4CAF50;
+    --accent-hover: #45a049;
     --project-bg: #ffffff;
-    --developer-bg: #d3d3d3; 
+    --developer-bg: #f3f4f6;
     --developer-techlead-bg: #b0c4de; 
     --vacancy-bg: #fff8dc; 
     --highlight-border: 3px solid #4CAF50;
     --highlight-bg: #f0fff0;
     --dimmed-opacity: 0.5;
     --developer-techlead-border: 2px solid gold;
-    --transition-time: 0.3s;
+    --dropzone-bg: #ffffff;
+    --dropzone-bg-hover: #f3f9f3;
+    --transition-time: 0.2s;
+    --radius: 10px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+    --input-bg: #0f172a;
+    --input-border: #334155;
+    --focus-ring: rgba(74, 222, 128, 0.35);
 }
 
 body.dark {
-    --bg-color: #2e2e2e;
-    --text-color: #e0e0e0;
-    --header-bg: #3a3a3a;
-    --project-bg: #333333;
-    --developer-bg: #5a5a5a;
-    --developer-techlead-bg: #5f7f9d;
+    --bg-color: #1f2937;
+    --text-color: #e5e7eb;
+    --muted-text: #9ca3af;
+    --header-bg: #111827;
+    --project-bg: #111827;
+    --developer-bg: #1f2937;
+    --developer-techlead-bg: #3b82f6;
     --vacancy-bg: #b19100; 
-    --developer-dropzone-bg: var(--transition-time);
+    --dropzone-bg: #0b1220;
+    --dropzone-bg-hover: #0f172a;
+    --input-bg: #0b1220;
+    --input-border: #374151;
+    --focus-ring: rgba(59, 130, 246, 0.35);
 }
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: background-color var(--transition-time), color var(--transition-time);
@@ -44,46 +59,43 @@ body.dark .developer-assigned:hover {
     background-color: #666;
 }
 
+/* fixed incorrect var usage for dark dropzone */
 body.dark .developer-dropzone {
-    background-color: var(--transition-time);
+    background-color: var(--dropzone-bg);
 }
 
 
-.developer-assigned.vacancy {
-    color: black;
-    background-color: #ffcc00;
-}
+.developer-assigned.vacancy { font-style: italic; }
 
 
-.add-project-form button {
+.add-project-form button, .add-developer-form button {
     padding: 5px;
-    border-radius: 5px;
+    border-radius: var(--radius);
     border: none;
     background-color: var(--accent-color);
     color: #fff;
     cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: background-color var(--transition-time), transform var(--transition-time), box-shadow var(--transition-time);
 }
 
-.add-project-form button:hover {
-    background-color: #45a049;
+.add-project-form button:hover, .add-developer-form button:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
 }
 
 
-/* Make sure inputs in dark theme are styled */
-body.dark input,
-body.dark select,
-body.dark textarea {
-    background: #555;
-    color: #fff;
-    border: 1px solid #777;
-}
+/* custom input styling handled via CSS variables above */
 
 /* topbar */
 .topbar {
     background-color: var(--header-bg);
-    padding: 10px;
+    padding: 12px 16px;
     border-bottom: 1px solid #ccc;
     z-index: 11;
+    position: sticky;
+    top: 0;
 }
 
 .topbar-row {
@@ -104,12 +116,13 @@ body.dark textarea {
 
 .data-controls button {
     border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
+    border-radius: var(--radius);
+    padding: 6px 12px;
     color: #fff;
     cursor: pointer;
     transition: background-color var(--transition-time);
     font-size: 14px;
+    box-shadow: var(--shadow-sm);
 }
 
 #export-btn { background-color: #4CAF50; }
@@ -125,13 +138,13 @@ body.dark textarea {
 .container {
     display: flex;
     flex: 1;
-    height: calc(100vh - 80px); /* topbar height approx + some margin */
+    height: calc(100vh - 64px); /* separate scrolls for sidebar/main */
 }
 
 .sidebar {
-    width: 250px;
+    width: 280px;
     background-color: var(--header-bg);
-    padding: 20px;
+    padding: 16px;
     box-sizing: border-box;
     overflow-y: auto;
     border-right: 1px solid #ccc;
@@ -143,14 +156,15 @@ body.dark textarea {
     flex-direction: column;
     padding: 20px;
     box-sizing: border-box;
-    overflow: auto;
-    border-left: 1px solid #ccc;
+    overflow: auto; /* own scroll area for projects */
+    min-width: 0; /* allow children (grid) to shrink and avoid overflow */
 }
 
 .sidebar h2 {
     text-align: center;
     margin-top: 0;
     font-size: 18px;
+    margin-bottom: 12px;
 }
 
 .add-developer-form, .search-developers {
@@ -158,15 +172,54 @@ body.dark textarea {
     text-align: center;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
 }
+
+.add-developer-form label {
+    text-align: left;
+    font-size: 12px;
+    color: var(--muted-text);
+}
+
+.direction-group { display: flex; flex-direction: column; gap: 6px; }
+.direction-group .direction-label { text-align: left; font-size: 12px; color: var(--muted-text); }
+.segmented { display: inline-flex; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; overflow: hidden; }
+.segmented .seg-btn { border: none; background: transparent; color: var(--text-color); padding: 6px 10px; cursor: pointer; font-size: 12px; }
+.segmented .seg-btn + .seg-btn { border-left: 1px solid var(--input-border); }
+.segmented .seg-btn.active { background: #1f2937; }
+
+.add-developer-form .assign-type-row.hidden { display: none; }
+.add-developer-form .assign-type-row { display: contents; }
+
+.filters-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.icon-btn { padding: 6px 10px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-color); cursor: pointer; }
+.filters-row .icon-btn, .filters-row .danger-btn { padding: 8px 10px; border-radius: 8px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-color); cursor: pointer; }
+.filters-row .danger-btn { color: #fca5a5; border-color: #7f1d1d; }
+.filters-row input { flex: 1; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-color); border-radius: 8px; padding: 8px 10px; }
+.filters-row select { background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-color); border-radius: 8px; padding: 8px 10px; }
+.search-developers.collapsed { display: none; }
 
 .add-developer-form input[type="text"],
 .search-developers input[type="text"],
-.add-project-form input[type="text"] {
-    width: auto;
-    padding: 5px;
-    border-radius: 5px;
+.add-project-form input[type="text"],
+select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-color);
+    box-sizing: border-box;
+}
+
+input::placeholder {
+    color: var(--muted-text);
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 4px var(--focus-ring);
 }
 
 .add-developer-form select {
@@ -175,49 +228,35 @@ body.dark textarea {
     border-radius: 5px;
 }
 
-.add-developer-form button {
-    padding: 5px;
-    border-radius: 5px;
-    border: none;
-    background-color: var(--accent-color);
-    color: #fff;
-    cursor: pointer;
-}
-
-.add-developer-form button:hover {
-    background-color: #45a049;
-}
+#developers .developer { flex-direction: column; align-items: stretch; }
+.dev-header { display: flex; align-items: center; gap: 8px; }
+.dev-header .name { font-weight: 600; flex: 1 1 auto; min-width: 0; white-space: normal; overflow: visible; }
 
 #developers .developer {
     position: relative;
-    padding: 10px;
-    margin: 5px 0;
+    padding: 8px 10px;
+    margin: 6px 0;
     cursor: grab;
     text-align: left;
-    border-radius: 5px;
+    border-radius: var(--radius);
     color: var(--text-color);
-    transition: background-color var(--transition-time);
+    transition: background-color var(--transition-time), border-color var(--transition-time);
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 5px;
+    flex-direction: column;
+    gap: 6px;
     background-color: var(--developer-bg);
+    box-shadow: var(--shadow-sm);
 }
 
-.developer.tech-lead {
-    background-color: var(--developer-techlead-bg);
-    border: var(--developer-techlead-border);
-}
+.developer:hover { background-color: #2a364a; }
 
-.developer.vacancy {
-    background-color: var(--vacancy-bg);
-    font-style: italic;
-    font-weight: bold;
-}
+.developer.tech-lead { border: none; }
 
-.developer span {
-    flex: 1;
-}
+.developer.vacancy { background-color: var(--developer-bg); font-style: italic; }
+
+.developer span { flex: initial; }
+
+.developer .meta { flex: 0 0 auto; display: flex; gap: 6px; }
 
 .developer .color-btn {
     background: none;
@@ -227,9 +266,58 @@ body.dark textarea {
     color: var(--text-color);
 }
 
+.developer .remove-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--text-color);
+}
+
+.developer .remove-btn:hover { color: #ef4444; }
+
 .developer .color-btn:hover {
     color: #000;
 }
+
+.developer .edit-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--text-color);
+}
+
+.developer .edit-btn:hover { color: #10b981; }
+
+.edit-name-input {
+    flex: 1;
+    padding: 6px 8px;
+    border-radius: var(--radius);
+    border: 1px solid #777;
+    background: transparent;
+    color: var(--text-color);
+}
+
+.dev-header .menu-btn { margin-left: auto; }
+.dev-header .dev-select { appearance: none; width: 14px; height: 14px; border-radius: 4px; border: 1.5px solid var(--input-border); background: transparent; display: inline-block; position: relative; }
+.dev-header .dev-select:checked { background-color: #22c55e; border-color: #22c55e; }
+.dev-header .dev-select:checked::after { content: ''; position: absolute; left: 3px; top: 0px; width: 4px; height: 8px; border: 2px solid #0b1220; border-left: 0; border-top: 0; transform: rotate(45deg); }
+.dev-meta-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.dev-util { display: flex; gap: 6px; margin-top: 0; }
+.pill { font-size: 11px; padding: 2px 6px; border-radius: 999px; }
+.pill.used { background: #374151; color: #e5e7eb; }
+.pill.avail { background: #064e3b; color: #a7f3d0; }
+
+/* Dropdown actions */
+.dropdown { position: relative; margin-left: auto; }
+.menu-btn { background: #0f172a; border: 1px solid var(--input-border); color: var(--text-color); border-radius: 8px; padding: 2px 8px; cursor: pointer; }
+.menu-btn:hover { background: #111827; }
+.dropdown-menu { position: absolute; right: 0; top: 110%; min-width: 140px; background: #0b1220; border: 1px solid var(--input-border); border-radius: 10px; box-shadow: var(--shadow-md); padding: 6px; display: none; z-index: 20; }
+.dropdown.open .dropdown-menu { display: block; }
+.dropdown-menu button { width: 100%; text-align: left; padding: 8px 10px; border: none; background: transparent; color: var(--text-color); cursor: pointer; border-radius: 8px; }
+.dropdown-menu button:hover { background: #111827; }
+.dropdown-menu button.danger { color: #f87171; }
 
 /* Projects */
 .add-project-form {
@@ -238,29 +326,74 @@ body.dark textarea {
     align-items: center;
     gap: 5px;
 }
+.add-project-form .project-actions { display: flex; gap: 8px; margin-left: auto; }
+.add-project-form #project-group-select { min-width: 160px; }
 
-.projects {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: flex-start;
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    border-radius: 999px;
+    font-size: 11px;
+    color: #e5e7eb;
+    background: #374151;
 }
 
+.badge.role { background: #1f2937; }
+.badge.region { background: #111827; }
+
+/* Seniority color cues */
+.badge.seniority-junior { background: #334155; }
+.badge.seniority-middle { background: #2563eb; }
+.badge.seniority-senior { background: #7c3aed; }
+.badge.seniority-tech-lead { background: #b45309; }
+
+/* Specialty color cues */
+.badge.specialty-be { background: #10b981; color: #052e16; }
+.badge.specialty-fe { background: #f472b6; color: #3b0a2a; }
+.badge.specialty-tech { background: #06b6d4; color: #062c33; }
+
+#projects { display: block; }
+
+.projects {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    align-items: start;
+}
+
+.project-group { margin-bottom: 24px; }
+.project-group-header { position: relative; display: flex; align-items: center; justify-content: flex-end; margin: 4px 4px 12px; }
+.project-group-header h3 { position: absolute; left: 50%; transform: translateX(-50%); margin: 0; font-size: 14px; color: var(--muted-text); letter-spacing: 0.4px; }
+.project-group .projects { margin-top: 8px; }
+.project-group .projects { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.project-group:not(:first-child) { border-top: 1px dashed #374151; padding-top: 16px; }
+
+.group-stats { display: inline-flex; gap: 6px; align-items: center; }
+.group-stats .stat { font-size: 11px; padding: 2px 6px; border-radius: 999px; background: #111827; color: #e5e7eb; }
+.group-stats .stat.be { background: #064e3b; color: #a7f3d0; }
+.group-stats .stat.fe { background: #312e81; color: #c7d2fe; }
+.group-stats .stat.tl { background: #92400e; color: #fde68a; }
+
 .project-column {
-    width: 300px;
+    width: auto;
     background-color: var(--project-bg);
     padding: 10px;
-    border-radius: 5px;
+    border-radius: var(--radius);
     box-sizing: border-box;
     transition: background-color var(--transition-time);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-sm);
     position: relative;
     border: 1px solid #ccc;
 }
 
+.project-column.dragging { opacity: 0.6; }
+.project-column.reorder-over { outline: 2px dashed var(--accent-color); outline-offset: -4px; }
+
 .project-column.highlight {
-    border: var(--highlight-border);
-    background-color: var(--highlight-bg);
+    border: 2px solid #22c55e;
+    background-color: rgba(34,197,94,0.08);
+    box-shadow: 0 0 0 4px rgba(34,197,94,0.15);
 }
 
 .project-column.dimmed {
@@ -268,11 +401,26 @@ body.dark textarea {
     filter: grayscale(100%);
 }
 
+/* Compact density mode */
+body.compact .projects { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+body.compact .project-column { padding: 8px; }
+body.compact .project-column h2 { font-size: 14px; }
+body.compact .sub-column h3 { font-size: 12px; }
+body.compact .developer-dropzone { min-height: 140px; }
+
 .project-header {
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 4px 0 8px 0;
+}
+
+/* Keep menu from affecting title centering */
+.project-header .dropdown {
+    position: absolute;
+    right: 8px;
+    top: 2px;
 }
 
 .project-column h2 {
@@ -290,10 +438,12 @@ body.dark textarea {
     font-size: 20px;
     cursor: pointer;
     color: var(--text-color);
+    opacity: 0.8;
 }
 
 .delete-project-btn:hover {
-    color: red;
+    color: #ef4444;
+    opacity: 1;
 }
 
 .sub-columns {
@@ -312,18 +462,43 @@ body.dark textarea {
     margin-bottom: 5px;
 }
 
+.add-pos-btn { border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text-color); border-radius: 8px; padding: 2px 8px; cursor: pointer; }
+.add-pos-btn:hover { background: #111827; }
+
+/* Vacancy styles */
+.badge.vacancy { background: #92400e; color: #fde68a; }
+.developer-assigned.vacancy { background: #3b2f1a; color: #fde68a; border: 1px dashed #b45309; }
+.developer-assigned.vacancy .vacancy-label { font-weight: 600; margin-right: 6px; }
+
+/* Styled FTE Goal input */
+.fte-input { width: 56px; background: var(--input-bg); color: var(--text-color); border: 1px solid var(--input-border); border-radius: 8px; padding: 4px 6px; }
+.fte-input:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 0 3px var(--focus-ring); }
+input[type=number].fte-input::-webkit-outer-spin-button,
+input[type=number].fte-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number].fte-input { -moz-appearance: textfield; }
+
 .developer-dropzone {
-    min-height: 200px;
-    background-color: #fff;
+    min-height: var(--dropzone-min-height, 200px);
+    background-color: var(--dropzone-bg);
     border: 2px dashed #ccc;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: var(--radius);
     color: #000;
     transition: background-color var(--transition-time);
 }
 
 .developer-dropzone:hover {
-    background-color: #f9f9f9;
+    background-color: var(--dropzone-bg-hover);
+}
+
+.developer-dropzone.dragover {
+    background-color: var(--dropzone-bg-hover);
+    border-color: var(--accent-color);
+}
+
+#developers.drop-target.dragover {
+    outline: 2px dashed var(--accent-color);
+    outline-offset: 4px;
 }
 
 .fte-goal, .fte-total, .fte-difference {
@@ -349,7 +524,7 @@ body.dark textarea {
     position: relative;
     padding: 5px;
     margin: 5px 0;
-    border-radius: 5px;
+    border-radius: var(--radius);
     text-align: center;
     display: flex;
     justify-content: space-between;
@@ -358,10 +533,17 @@ body.dark textarea {
     gap: 5px;
     transition: background-color var(--transition-time);
     background-color: var(--developer-bg);
+    box-shadow: var(--shadow-sm);
+    word-break: break-word;
 }
 
 .developer-assigned:hover {
     background-color: #e0e0e0;
+}
+/* highlight selected developer assignments */
+.developer-assigned.highlighted {
+    outline: 2px solid #22c55e;
+    background-color: rgba(34,197,94,0.12);
 }
 
 .developer-assigned .remove-btn {
@@ -395,7 +577,7 @@ body.dark textarea {
     border: 1px solid #888;
     width: 300px;
     text-align: center;
-    border-radius: 5px;
+    border-radius: var(--radius);
     color: var(--text-color);
 }
 
@@ -426,14 +608,4 @@ body.dark textarea {
     background-color: #45a049;
 }
 
-@media (max-width: 900px) {
-    .project-column {
-        width: calc(50% - 20px);
-    }
-}
-
-@media (max-width: 600px) {
-    .project-column {
-        width: 100%;
-    }
-}
+/* responsive grid via auto-fill handles breakpoints; explicit width overrides removed */
