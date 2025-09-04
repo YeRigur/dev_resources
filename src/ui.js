@@ -272,9 +272,9 @@ function renderProjects() {
       else if (a.type === 'frontend') fe += a.fte;
       if (dev.role === 'Tech Lead') tl += a.fte;
     });
-    const beEl = document.createElement('span'); beEl.className = 'stat be'; beEl.textContent = `BE ${window.Utils ? Utils.formatFTE(be) : be}`;
-    const feEl = document.createElement('span'); feEl.className = 'stat fe'; feEl.textContent = `FE ${window.Utils ? Utils.formatFTE(fe) : fe}`;
-    const tlEl = document.createElement('span'); tlEl.className = 'stat tl'; tlEl.textContent = `TL ${window.Utils ? Utils.formatFTE(tl) : tl}`;
+    const beEl = document.createElement('span'); beEl.className = 'stat be type-toggle'; beEl.textContent = `BE ${window.Utils ? Utils.formatFTE(be) : be}`; beEl.setAttribute('data-type','backend'); beEl.title = 'Highlight Back-end'; beEl.addEventListener('click', ()=> setHighlightType('backend'));
+    const feEl = document.createElement('span'); feEl.className = 'stat fe type-toggle'; feEl.textContent = `FE ${window.Utils ? Utils.formatFTE(fe) : fe}`; feEl.setAttribute('data-type','frontend'); feEl.title = 'Highlight Front-end'; feEl.addEventListener('click', ()=> setHighlightType('frontend'));
+    const tlEl = document.createElement('span'); tlEl.className = 'stat tl type-toggle'; tlEl.textContent = `TL ${window.Utils ? Utils.formatFTE(tl) : tl}`; tlEl.setAttribute('data-type','tl'); tlEl.title = 'Highlight Tech Leads'; tlEl.addEventListener('click', ()=> setHighlightType('tl'));
     stats.appendChild(beEl); stats.appendChild(feEl); stats.appendChild(tlEl);
     header.appendChild(stats);
     actions.appendChild(renBtn);
@@ -336,6 +336,9 @@ function renderProjects() {
 
       const subTitle = document.createElement('h3');
       subTitle.textContent = (type === 'backend') ? 'Back-end' : 'Front-end';
+      subTitle.classList.add('type-toggle');
+      subTitle.setAttribute('data-type', type);
+      subTitle.addEventListener('click', () => { setHighlightType(type); });
       const addPosBtn = document.createElement('button');
       addPosBtn.className = 'add-pos-btn';
       addPosBtn.title = 'Add open position';
@@ -412,6 +415,7 @@ function renderProjects() {
   initFTEInputs();
   renderAssignments();
   updateFTETotals();
+  applyTypeHighlight && applyTypeHighlight();
   // restore scroll
   projectsContainer.scrollTop = prevScroll;
 }
@@ -487,6 +491,8 @@ function renderAssignments() {
     if (dropzone) {
       const devElement = document.createElement('div');
       devElement.classList.add('developer-assigned');
+      devElement.setAttribute('data-type', assignment.type);
+      devElement.setAttribute('data-role', developer.role || '');
       devElement.setAttribute('data-dev-id', String(assignment.devId));
       devElement.setAttribute('data-project-id', String(assignment.projectId));
       devElement.setAttribute('draggable', 'true');
@@ -512,6 +518,66 @@ function renderAssignments() {
   saveData();
   // rebind drag handlers for new assignment elements
   if (window.initDragAndDrop) initDragAndDrop();
+  if (typeof applyTypeHighlight === 'function') applyTypeHighlight();
+}
+
+function setHighlightType(type) {
+  if (DEV_DATA.highlightType === type) {
+    DEV_DATA.highlightType = null;
+  } else {
+    DEV_DATA.highlightType = type;
+  }
+  applyTypeHighlight();
+}
+
+function applyTypeHighlight() {
+  const type = DEV_DATA.highlightType;
+  document.querySelectorAll('.type-toggle').forEach(el => {
+    el.classList.toggle('active', !!type && el.getAttribute('data-type') === type);
+  });
+  document.querySelectorAll('.developer-assigned').forEach(el => {
+    if (!type) {
+      el.classList.remove('type-match','type-dim');
+      return;
+    }
+    if (type === 'tl') {
+      const r = el.getAttribute('data-role');
+      if (r === 'Tech Lead') {
+        el.classList.add('type-match');
+        el.classList.remove('type-dim');
+      } else {
+        el.classList.add('type-dim');
+        el.classList.remove('type-match');
+      }
+      return;
+    }
+    const t = el.getAttribute('data-type');
+    if (t === type) {
+      el.classList.add('type-match');
+      el.classList.remove('type-dim');
+    } else {
+      el.classList.add('type-dim');
+      el.classList.remove('type-match');
+    }
+  });
+  document.querySelectorAll('.developer-dropzone').forEach(el => {
+    if (!type) {
+      el.classList.remove('type-match','type-dim');
+      return;
+    }
+    if (type === 'tl') { // do not highlight dropzones for TL filter
+      el.classList.remove('type-match','type-dim');
+      return;
+    }
+    const t = el.getAttribute('data-type');
+    if (t === type) {
+      el.classList.add('type-match');
+      el.classList.remove('type-dim');
+    } else {
+      el.classList.add('type-dim');
+      el.classList.remove('type-match');
+    }
+  });
 }
 
 function startEditDeveloperName(dev, nameSpan) {
